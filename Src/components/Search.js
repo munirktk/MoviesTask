@@ -1,25 +1,19 @@
-// SearchComponent.js
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import colors from '../constants/colors';
 
-const Search = ({ onSearch }) => {
+const AnimatedSearch = ({onSearch}) => {
   const [searchText, setSearchText] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+    console.log("searched Text", text);
+    onSearch(text) 
+  };
 
   const handleCancel = () => {
     setSearchText('');
-    setIsFocused(false); // Set focus to false to hide the cancel button
-    if (onSearch) {
-      onSearch(''); // Call onSearch with an empty string to clear results
-    }
-  };
-
-  const handleSearchTextChange = (text) => {
-    setSearchText(text);
-    if (onSearch) {
-      onSearch(text); // Call onSearch with the current text
-    }
   };
 
   return (
@@ -27,19 +21,14 @@ const Search = ({ onSearch }) => {
       <Icon name="search" size={24} color="gray" style={styles.icon} />
       <TextInput
         style={styles.input}
-        value={searchText}
-        onChangeText={handleSearchTextChange}
-        onFocus={() => setIsFocused(true)} // Set focus to true on focus
-        onBlur={() => {
-          if (searchText === '') {
-            setIsFocused(false); // Hide cancel button if input is empty on blur
-          }
-        }}
         placeholder="Search..."
+        placeholderTextColor="gray"
+        value={searchText}
+        onChangeText={handleSearch}
       />
-      {isFocused && searchText.length > 0 && (
-        <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
-          <Icon name="close" size={24} color="gray" />
+      {searchText.length > 0 && (
+        <TouchableOpacity onPress={handleCancel}>
+          <Icon name="close" size={24} color="gray" style={styles.icon} />
         </TouchableOpacity>
       )}
     </View>
@@ -50,25 +39,22 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    backgroundColor: 'white',
-    marginHorizontal: 20
+    borderColor: '#CCCCCC',
+    backgroundColor:'#F2F2F6',
+    borderRadius: 30, 
+    margin: 16,
+    paddingHorizontal:10
   },
   input: {
     flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    marginLeft: 8,
     fontSize: 16,
+    color:colors.text
   },
   icon: {
-    marginRight: 10,
-  },
-  cancelButton: {
-    marginLeft: 10,
+    padding: 4,
   },
 });
 
-export default Search;
+export default AnimatedSearch;
